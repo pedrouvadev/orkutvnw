@@ -13,11 +13,13 @@ export default function Register() {
     e.preventDefault();
 
     try {
-      await api.post("/usuarios", {nome, email, senha});
+      const res = await api.post("/usuarios", {nome, email, senha});
+      console.log("Resposta do cadastro:", res.data);
       alert("Usuário criado, você será redirecionado para a tela login!");
       navigate("/login")
-    } catch {
-      alert("Erro ao cadastrar")
+    } catch (error) {
+      console.error("Erro ao cadastrar:", error);
+      alert("Erro ao cadastrar: " + (error.response?.data?.message || error.message));
     }
   }
 
@@ -26,9 +28,22 @@ export default function Register() {
     <div className={s.registerContainer}>
       <form onSubmit={handleRegister}>
         <h2>Cadastro</h2>
-        <input placeholder="Nome" onChange={(e) => setNome(e.target.value)} />
-        <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" placeholder="Senha" onChange={(e) => setSenha(e.target.value)} />
+        <input 
+          placeholder="Nome" 
+          value={nome}
+          onChange={(e) => setNome(e.target.value)} 
+        />
+        <input 
+          placeholder="Email" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)} 
+        />
+        <input 
+          type="password" 
+          placeholder="Senha" 
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)} 
+        />
         <button>Cadastrar</button>
       </form>
     </div>

@@ -15,11 +15,13 @@ export default function Login() {
 
     try {
       const res = await api.post("/login", {email, senha});
+      console.log("Resposta da API:", res.data);
       login(res.data.token);
       alert("Login realizado!")
       navigate("/")
-    } catch {
-      alert("Erro ao logar");
+    } catch (error) {
+      console.error("Erro ao logar:", error);
+      alert("Erro ao logar: " + (error.response?.data?.message || error.message));
     }
   }
 
@@ -27,8 +29,17 @@ export default function Login() {
     <div className={s.loginContainer}>
       <form onSubmit={handleLogin}>
         <h2>Login</h2>
-        <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" placeholder="Senha" onChange={(e) => setSenha(e.target.value)} />
+        <input 
+          placeholder="Email" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)} 
+        />
+        <input 
+          type="password" 
+          placeholder="Senha" 
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)} 
+        />
         <button>Entrar</button>
       </form>
       <div>

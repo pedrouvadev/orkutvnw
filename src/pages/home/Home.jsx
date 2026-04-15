@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Post from "../../components/post/Post";
+import api from "../../services/api";
 import s from "./Home.module.scss";
 
 export default function Home() {
@@ -12,10 +13,60 @@ export default function Home() {
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  async function fetchPosts() {
+    try {
+      const res = await api.get("/posts");
+      setPosts(res.data);
+    } catch {
+      alert("Erro ao carregar posts");
+    }
+  }
+
   function handleLogout() {
-    logout();          // remove token
-    navigate("/login"); // redireciona
+    logout();
+    navigate("/login");
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    try {
+      if (editandoId) {
+        await api.put(`/posts/${editandoId}`, { titulo, conteudo });
+        alert("Post atualizado!");
+      } else {
+        await api.post("/posts", { titulo, conteudo });
+        alert("Post criado!");
+      }
+      setTitulo("");
+      setConteudo("");
+      setEditandoId(null);
+      fetchPosts();
+    } catch {
+      alert("Erro ao salvar post");
+    }
+  }
+
+  function handleEdit(post) {
+    setEditandoId(post.post_id);
+    setTitulo(post.titulo);
+    setConteudo(post.conteudo);
+  }
+
+  async function handleDelete(postId) {
+    if (!window.confirm("Tem certeza que deseja excluir?")) return;
+
+    try {
+      await api.delete(`/posts/${postId}`);
+      alert("Post excluído!");
+      fetchPosts();
+    } catch {
+      alert("Erro ao excluir post");
+    }
   }
 
   return (
@@ -27,7 +78,7 @@ export default function Home() {
         </button>
       </div>
       {/* FORM DE POSTAGEM */}
-        <form className={s.postForm} onSubmit={}>
+        <form className={s.postForm} onSubmit={handleSubmit}>
           <input
             placeholder="Título"
             value={titulo}

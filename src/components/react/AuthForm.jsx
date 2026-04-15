@@ -91,7 +91,7 @@ export default function AuthForm({ mode }) {
         <div className="mt-6 text-center">
           <p className="text-white/80 mb-2">Não tem cadastro? Crie um:</p>
           <button
-            onClick={() => window.location.href = "/register"}
+            onClick={() => window.location.href = "/orkutvnw/register"}
             className="px-6 py-2 bg-white/20 text-white font-semibold rounded-lg hover:bg-white/30 transition-all duration-300"
           >
             Cadastre-se
@@ -103,7 +103,7 @@ export default function AuthForm({ mode }) {
         <div className="mt-6 text-center">
           <p className="text-white/80 mb-2">Já tem cadastro? Faça login:</p>
           <button
-            onClick={() => window.location.href = "/login"}
+            onClick={() => window.location.href = "/orkutvnw/login"}
             className="px-6 py-2 bg-white/20 text-white font-semibold rounded-lg hover:bg-white/30 transition-all duration-300"
           >
             Fazer Login

@@ -10,7 +10,7 @@ export default function AuthForm({ mode }) {
     // Redirect authenticated users away from login/register
     const token = localStorage.getItem("token");
     if (token && mode === "login") {
-      window.location.href = "/";
+      window.location.href = "/orkutvnw/";
     }
   }, [mode]);
 
@@ -22,7 +22,7 @@ export default function AuthForm({ mode }) {
       alert("Login realizado!");
       // Small delay to ensure token is stored before redirect
       setTimeout(() => {
-        window.location.href = "/";
+        window.location.href = "/orkutvnw/";
       }, 100);
     } catch (error) {
       alert("Erro ao logar: " + (error.response?.data?.message || error.message));
@@ -34,7 +34,7 @@ export default function AuthForm({ mode }) {
     try {
       const res = await api.post("/usuarios", { nome, email, senha });
       alert("Usuário criado, você será redirecionado para a tela de login!");
-      window.location.href = "/login";
+      window.location.href = "/orkutvnw/login";
     } catch (error) {
       alert("Erro ao cadastrar: " + (error.response?.data?.message || error.message));
     }

@@ -12,7 +12,7 @@ export default function PostFeed() {
     // Check if user is authenticated
     const token = localStorage.getItem("token");
     if (!token) {
-      window.location.href = "/login";
+      window.location.href = "/orkutvnw/login";
       return;
     }
     fetchPosts();
@@ -29,7 +29,7 @@ export default function PostFeed() {
 
   function handleLogout() {
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    window.location.href = "/orkutvnw/login";
   }
 
   async function handleSubmit(e) {

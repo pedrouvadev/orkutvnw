@@ -1,0 +1,11 @@
+---
+import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
+import PostFeed from '../components/react/PostFeed.jsx';
+---
+
+<Layout title="OrkutVNW 2026 - Feed">
+  <main class="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900">
+    <PostFeed client:only="react" />
+  </main>
+</Layout>

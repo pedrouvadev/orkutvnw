@@ -1,0 +1,11 @@
+---
+import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
+import AuthForm from '../components/react/AuthForm.jsx';
+---
+
+<Layout title="OrkutVNW 2026 - Login">
+  <main class="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900 flex items-center justify-center">
+    <AuthForm mode="login" client:only="react" />
+  </main>
+</Layout>

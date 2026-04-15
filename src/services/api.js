@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-   baseURL: "https://api-orkut-1tap.onrender.com"
+   baseURL: "https://api-orkut-qe4l.onrender.com"
  });
 
  // Interceptor → adiciona o token automaticamente

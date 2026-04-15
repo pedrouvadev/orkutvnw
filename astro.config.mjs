@@ -6,7 +6,6 @@ export default defineConfig({
     react(),
   ],
   output: 'static',
-  base: '/orkutvnw/',
   vite: {
     build: {
       outDir: 'dist',

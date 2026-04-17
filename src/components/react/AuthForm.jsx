@@ -19,6 +19,10 @@ export default function AuthForm({ mode }) {
     try {
       const res = await api.post("/login", { email, senha });
       localStorage.setItem("token", res.data.token);
+      // Store user info if available from backend
+      if (res.data.user) {
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+      }
       alert("Login realizado!");
       // Small delay to ensure token is stored before redirect
       setTimeout(() => {

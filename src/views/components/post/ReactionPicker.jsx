@@ -1,13 +1,5 @@
 import { useState, useRef } from "react";
-
-const REACTIONS = [
-  { emoji: "👍", name: "like", label: "Curtir" },
-  { emoji: "❤️", name: "love", label: "Amar" },
-  { emoji: "😂", name: "laugh", label: "Rir" },
-  { emoji: "😮", name: "wow", label: "Uau" },
-  { emoji: "😢", name: "sad", label: "Triste" },
-  { emoji: "😡", name: "angry", label: "Grrr" },
-];
+import { REACTIONS } from "../../../models/reactions";
 
 export default function ReactionPicker({ reactions, userReaction, onReact, totalReactions }) {
   const [showPicker, setShowPicker] = useState(false);

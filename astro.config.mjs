@@ -7,6 +7,7 @@ export default defineConfig({
   ],
   output: 'static',
   base: '/orkutvnw/',
+  srcDir: 'src',
   vite: {
     build: {
       outDir: 'dist',

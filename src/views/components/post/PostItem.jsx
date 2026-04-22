@@ -1,43 +1,19 @@
+import { REACTION_EMOJIS } from "../../../models/reactions";
+import { formatDate } from "../../../utils/date";
 import ReactionPicker from "./ReactionPicker";
-
-const REACTION_EMOJIS = {
-  like: "👍",
-  love: "❤️",
-  laugh: "😂",
-  wow: "😮",
-  sad: "😢",
-  angry: "😡"
-};
+import { useReactions } from "../../../controllers/hooks/useReactions";
 
 export default function PostItem({ post, onEdit, onDelete, onReact, currentUserId }) {
   // API returns: { id: userId, nome, titulo, conteudo, criado_em, post_id }
   const postOwnerId = post.id; // id = user ID who created the post
   const isOwner = currentUserId && postOwnerId && String(currentUserId) === String(postOwnerId);
 
-  // Get reactions from localStorage
-  const reactions = getReactions(post.post_id);
+  const { getPostReactions, getUserReaction } = useReactions();
+
+  // Get reactions
+  const reactions = getPostReactions(post.post_id);
   const totalReactions = Object.values(reactions).reduce((sum, count) => sum + count, 0);
   const userReaction = getUserReaction(post.post_id, currentUserId);
-
-  // Format date
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    try {
-      let date = new Date(dateString);
-      if (isNaN(date.getTime()) && !isNaN(Number(dateString))) {
-        date = new Date(Number(dateString));
-      }
-      if (isNaN(date.getTime())) return "";
-      return date.toLocaleDateString("pt-BR", {
-        day: "numeric",
-        month: "short",
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-    } catch {
-      return "";
-    }
-  };
 
   const formattedDate = formatDate(post.criado_em);
 
@@ -106,37 +82,4 @@ export default function PostItem({ post, onEdit, onDelete, onReact, currentUserI
       </div>
     </div>
   );
-}
-
-// --- LocalStorage reactions helpers ---
-
-function getReactionsStorage() {
-  try {
-    const data = localStorage.getItem("post_reactions");
-    return data ? JSON.parse(data) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveReactionsStorage(allReactions) {
-  localStorage.setItem("post_reactions", JSON.stringify(allReactions));
-}
-
-function getReactions(postId) {
-  const all = getReactionsStorage();
-  const postReactions = all[postId] || {};
-  // Aggregate counts by reaction type
-  const counts = {};
-  Object.values(postReactions).forEach(reaction => {
-    counts[reaction] = (counts[reaction] || 0) + 1;
-  });
-  return counts;
-}
-
-function getUserReaction(postId, userId) {
-  if (!userId) return null;
-  const all = getReactionsStorage();
-  const postReactions = all[postId] || {};
-  return postReactions[userId] || null;
 }

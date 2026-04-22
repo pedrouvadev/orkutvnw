@@ -1,52 +1,26 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import PostItem from "./PostItem";
-import api from "../../services/api";
-
-// Decode JWT to get user ID
-function decodeToken(token) {
-  try {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join("")
-    );
-    return JSON.parse(jsonPayload);
-  } catch {
-    return null;
-  }
-}
+import api from "../../../services/api";
+import { useToast } from "../../../controllers/hooks/useToast";
+import { useReactions } from "../../../controllers/hooks/useReactions";
+import { useCurrentUserId } from "../../../controllers/hooks/useAuth";
 
 export default function PostFeed() {
   const [posts, setPosts] = useState([]);
-  const [currentUserId, setCurrentUserId] = useState(null);
-  const [toasts, setToasts] = useState([]);
   const [titulo, setTitulo] = useState("");
-
-  const toast = useCallback((message, type = "success") => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3000);
-  }, []);
-
   const [conteudo, setConteudo] = useState("");
   const [editandoId, setEditandoId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  const currentUserId = useCurrentUserId();
+  const { toasts, toast } = useToast();
+  const { setReaction } = useReactions();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       window.location.href = "/orkutvnw/login";
       return;
-    }
-    // Decode JWT to get user ID
-    const decoded = decodeToken(token);
-    if (decoded?.id) {
-      setCurrentUserId(decoded.id);
     }
     fetchPosts();
   }, [refreshKey]);
@@ -115,26 +89,8 @@ export default function PostFeed() {
 
   function handleReact(postId, reactionType) {
     if (!currentUserId) return;
-
-    try {
-      const all = JSON.parse(localStorage.getItem("post_reactions") || "{}");
-      const postReactions = all[postId] || {};
-
-      if (reactionType === null) {
-        // Remove reaction
-        delete postReactions[currentUserId];
-      } else {
-        // Add/update reaction
-        postReactions[currentUserId] = reactionType;
-      }
-
-      all[postId] = postReactions;
-      localStorage.setItem("post_reactions", JSON.stringify(all));
-      // Force re-render
-      setRefreshKey(k => k + 1);
-    } catch {
-      toast("Erro ao salvar reação", "error");
-    }
+    setReaction(postId, currentUserId, reactionType);
+    setRefreshKey(k => k + 1);
   }
 
   return (
